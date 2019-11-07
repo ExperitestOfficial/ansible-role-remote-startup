@@ -1,0 +1,40 @@
+
+# validation
+
+- name: assert all vars are set
+  assert: { that: "{{ item }} != '' " }
+  with_items:
+  - ansible_user_id
+  - ansible_password
+
+
+# configure
+
+- name: make sure ansiblewinrm folder exists
+  win_file:
+    path: '%UserProfile%\ansiblewinrm'
+    state: directory
+
+- name: copy ansiblewinrm files
+  win_copy:
+    src: "{{ item }}"
+    dest: '%UserProfile%\ansiblewinrm\'
+  with_items:
+    ['ansiblebootstrap.ps1','ConfigureRemotingForAnsible.ps1']
+
+# create scheduler at startup
+
+- name: Create task to run a ansiblewinrm script on boot
+  win_scheduled_task:
+    name: AnsibleWinRM
+    description: Run a PowerShell script
+    actions:
+    - path: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+      arguments: -ExecutionPolicy Unrestricted -NonInteractive -File %UserProfile%\ansiblewinrm\ansiblebootstrap.ps1
+    triggers:
+    - type: boot
+    username: "{{ ansible_user_id }}"
+    password: "{{ ansible_password }}"
+    logon_type: password
+    run_level: highest
+    state: present
