@@ -2,4 +2,4 @@
 - hosts: windows
 
   roles:
-    - role: ansible-remote-startup
+    - role: ansible-winrm-startup
