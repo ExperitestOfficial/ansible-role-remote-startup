@@ -1,4 +1,4 @@
 
-- src: git+https://github.com/ExperitestOfficial/ansible-role-remote-startup.git
+- src: git+https://github.com/ExperitestOfficial/ansible-role-winrm-startup.git
   version: master
-  name: ansible-remote-startup
+  name: ansible-winrm-startup
